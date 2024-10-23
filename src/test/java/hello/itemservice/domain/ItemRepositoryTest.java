@@ -31,14 +31,36 @@ public class ItemRepositoryTest {
 
     @Test
     void findAll() {
+        // given
         Item item1 = new Item("cushion21", 5000, 5);
         Item item2 = new Item("cushion23", 5000, 5);
 
+        // when
         itemRepository.save(item1);
         itemRepository.save(item2);
 
+        // then
         List<Item> items = itemRepository.findAll();
         assertThat(items.size()).isEqualTo(2);
         assertThat(items).contains(item1, item2);
+    }
+
+    @Test
+    void updateItem(){
+        // given
+        Item item1 = new Item("cushion21", 5000, 5);
+
+        Item savedItem = itemRepository.save(item1);
+        Long itemId = savedItem.getId();
+
+        // when
+        Item item2 = new Item("cushion23", 5000, 5);
+        itemRepository.update(itemId, item2);
+
+        // then
+        Item findItem = itemRepository.findById(itemId);
+        assertThat(findItem.getItemName()).isEqualTo(item2.getItemName());
+        assertThat(findItem.getPrice()).isEqualTo(item2.getPrice());
+        assertThat(findItem.getQuantity()).isEqualTo(item2.getQuantity());
     }
 }
